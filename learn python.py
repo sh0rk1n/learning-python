@@ -311,7 +311,7 @@
 #             print(score)
 #     elif choice == "2":
 #         score = int(input( "Впишите свой рекорд: "))
-#         scores.append(score) # добавляет значение в списке
+#         scores.append(score) # добавляет значение в конец списка
 #     elif choice == "3":
 #         score = int(input("Какой из рядов удалить?"))
 #         if score in scores:
@@ -338,7 +338,7 @@
 # while choice != "0":
 #     print(
 #         """
-#         Рекорды 2.0     ё   у ма
+#         Рекорды 2.0     
 #         0 - Выйти
 #         1 - Показать рекорды
 #         2 - Добавить рекорды
@@ -366,5 +366,14 @@
 #         print("Извините, в меню нет пункта", choice)
 # input("\n\nНажмите Enter, чтобы выйти.")
 # Пример списка dd
-n = 6%6
-print(n)
+#  n = 6%6
+#  print(n)
+
+#интересная работа с ссылками в питоне:
+mike = ["рубашка", "брюки",  "туфли"]
+honey = mike
+value = honey
+
+honey[2] = "ботинки"
+
+print(mike, "\n" , honey, value)
