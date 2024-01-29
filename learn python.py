@@ -371,9 +371,16 @@
 
 #интересная работа с ссылками в питоне:
 mike = ["рубашка", "брюки",  "туфли"]
-honey = mike
-value = honey
+# honey = mike
+# value = honey
 
+# honey[2] = "ботинки"
+
+# print(mike, "\n" , honey, "\n" , value)
+
+honey = mike[:]
+print(honey)
 honey[2] = "ботинки"
-
-print(mike, "\n" , honey, value)
+print(honey, "\n", mike)
+a = "hello word"
+print(a[::])
