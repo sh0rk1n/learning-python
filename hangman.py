@@ -1,18 +1,19 @@
 import pygame
 import random
+import sys
 
 pygame.init() # preparing the module pygame for operation
 
 screen = pygame.display.set_mode((1600, 900)) # creating app window res 1600x900 ; type surface (2D object)
 
-surface = pygame.Surface((1600,900)) # (1600,900) - tuple ; surface() - function/class?
-surface.fill((255,255,255)) # filling the surface  color
+surface = pygame.Surface((800, 200)) # Increase the size of the surface
+surface.fill((255, 255, 255)) # filling the surface color
 
-screen.blit(surface,(300,250)) # displaying the surface on the screen
+screen.blit(surface, (400, 450)) # Adjust the coordinates to display the surface on the screen
 pygame.display.flip() # displaying changes on the screen
 
-pygame.font.init()
-font = pygame.font.Font(None,36)
+pygame.font.init() # preparing the module pygame_font
+font = pygame.font.Font(None, 36) # size of font
 
 dictionary = [
     "акробатика", "биохимия", "вице-канцлер", "гомеопатия", "декортирование",
@@ -39,37 +40,43 @@ dictionary = [
 choose_word = random.choice(dictionary) # choose the random word
 guessed_letters = set() # create a set where will come the letters which user guessed
 
-attemps = 6
-while attemps > 0:
-    letter = input("Введите букву: ").lower()
-    
-    # Отображение текущего состояния слова с угаданными буквами
+attempts = 6
+input_text="" # переменная для хранения введеного текста польз.
+while attempts > 0:
+    for event in pygame.event.get(): # перебираем все события, которые произошли в pygame (типа нажатие клавиши мыши и тд)
+        if event.type == pygame.QUIT: # если окно закрыли
+            pygame.quit() # завершается работа пугейм
+            sys.exit() # завершается выполнение программы
+        elif event.type == pygame.KEYDOWN: # если нажали клавишу
+            if event.unicode.isalpha(): # если это буква
+                letter = event.unicode.lower() # преобразование символа в строчный формат
+                if letter not in guessed_letters:
+                    if letter in choose_word:
+                        guessed_letters.add(letter)
+                    else:
+                        attempts -= 1
+                input_text += letter
+                if event.key == pygame.K_RETURN:  # Если нажат Enter
+                    # Обработка введенной буквы после нажатия Enter
+                    input_text = ""  # Сброс введенной буквы после подтвержденияи
+
     text = font.render("Слово: " + " ".join(a if a in guessed_letters else "_" for a in choose_word), True, (0, 0, 0))
-    surface.fill((255, 255, 255))  # Очистка поверхности перед обновлением
-    screen.blit(surface, (300, 250))  # Отображение поверхности на экране
-    screen.blit(text, (300, 500))  # Отображение текста с текущим состоянием слова
-    pygame.display.flip()  # Обновление экрана
+    input_surface = font.render("Введенная буква: " + input_text, True, (0, 0, 0))
 
-    if letter.isalpha() and len(letter) == 1:
-        if letter in guessed_letters:
-            print("Вы уже угадали букву!")
-        elif letter in choose_word:
-            guessed_letters.add(letter)
-            print("Вы угадали! Слово: ", " ".join(a if a in guessed_letters else "_" for a in choose_word ))
-        else:
-            attemps -=1
-            print("Вы не угадали! Осталось попыток: ", attemps)
-    else:
-        print("Введите корректную букву!")
+    surface.fill((255, 255, 255)) # заливает поверхность белым цветом
+    screen.blit(surface, (400, 450)) # отображается surface на основном экране
+    screen.blit(text, (400, 450)) # отображается "Слово: "
+    screen.blit(input_surface, (400, 500)) # "введеная буква:"
+    pygame.display.flip()
 
-
-running = True
-while running:
-    
-    for event in pygame.event.get(): # перебирает все события - iterates throught all events
-        if event.type == pygame.QUIT: # если закрыли окно - if closed the app windows
-            running= False # cycle end
-
+    if set(choose_word) <= guessed_letters: # если множество всех букв рандомного слова <= множеству угаданых слов
+        print("Поздравляю, вы угадали слово:", choose_word)
+        break
+    elif attempts == 0:
+        print("Игра окончена. Вы проиграли. Загаданное слово было:", choose_word)
+        break
 pygame.quit() # end pygame // script completed
+sys.exit()
+
 
 
